@@ -42,6 +42,25 @@ public class IntList {
         return p.first;
     }
 
+    public static IntList incrList(IntList L, int x) {
+        if(L == null){
+            return L;
+        }else{
+            IntList copy = new IntList(L.first + x, incrList(L.rest,x));
+            return copy;
+        }
+    }
+
+    public static IntList dincrList(IntList L, int x) {
+        if(L == null){
+            return L;
+        }else{
+            L.first -= x;
+            dincrList(L.rest, x);
+            return L;
+        }
+    }
+
     public static void main(String[] args) {
         IntList L = new IntList(15,null);
         L = new IntList(10, L);//create a new IntList where the rest is the old IntList
