@@ -17,9 +17,9 @@ public class SLList{
     private int size;
 
 
-    public SLList(int x){
-        first = new IntNode(x, null);
-        this.size = 1;
+    public SLList(){
+        first = null;
+        this.size = 0;
     }
     
     /** Adds x to the front of the list */
@@ -36,6 +36,10 @@ public class SLList{
         this.size++;
         IntNode p = this.first;
         /** Move p to the end of the list */
+        if(p == null){
+            p = new IntNode(x, null);
+            return;
+        }
         while(p.next != null){
             p = p.next;
         }
@@ -56,10 +60,8 @@ public class SLList{
 
     public static void main(String[] args){
         /** Creates a list of one integer 10 */
-        SLList L = new SLList(15);
-        L.addFirst(10);
-        L.addFirst(5);
-        L.addLast(20);
+        SLList L = new SLList();
+        L.addLast(5);
         System.out.println(L.size());  
     }
 }
