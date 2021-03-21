@@ -19,7 +19,7 @@ public class SLList{
 
     public SLList(int x){
         first = new IntNode(x, null);
-        this.size = 1
+        this.size = 1;
     }
     
     /** Adds x to the front of the list */
@@ -51,7 +51,7 @@ public class SLList{
     }
 
     public int size(){
-        return size(this.first);
+        return this.size;
     }
 
     public static void main(String[] args){
