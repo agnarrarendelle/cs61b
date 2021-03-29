@@ -74,6 +74,10 @@ public class ArrayDeque<ElemType> {
         return this.size;
     }
 
+    public boolean isEmpty(){
+        return this.size() == 0;
+    }
+
     public ElemType get(int index){
         int firstLength = this.items.length - this.nextFirst - 1;
         int lastLength = this.nextLast;
