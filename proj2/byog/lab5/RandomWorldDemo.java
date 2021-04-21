@@ -3,8 +3,11 @@ package byog.lab5;
 import byog.TileEngine.TERenderer;
 import byog.TileEngine.TETile;
 import byog.TileEngine.Tileset;
+import org.junit.Test;
 
 import java.util.Random;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Draws a world that contains RANDOM tiles.
@@ -52,7 +55,13 @@ public class RandomWorldDemo {
         fillWithRandomTiles(randomTiles);
 
         ter.renderFrame(randomTiles);
+
+
     }
 
 
 }
+
+
+
+
