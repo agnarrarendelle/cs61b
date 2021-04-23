@@ -25,6 +25,11 @@ public class HexWorld {
             this.y = y;
         }
     }
+    private static final int WIDTH = 150;
+    private static final int HEIGHT = 150;
+
+    private static final long SEED = 2723;
+    private static final Random RANDOM = new Random(SEED);
 
     /**
      * Adds a hexagon to the world.
@@ -34,9 +39,8 @@ public class HexWorld {
      * @param type the tile to draw
      */
     public static void addHexagon(TETile[][] world, Position pos, int size, TETile type){
-        if(size < 2){
-            throw new IllegalArgumentException("Hexagon must be at least size 2");
-        }else{
+
+
             //A hexagon have 2*size rows, the code below iterates from bottom to top
             for(int i = 0; i < size*2; i++){
                 //choose the Y coordinate of the row
@@ -51,7 +55,7 @@ public class HexWorld {
                 addRow(world, rowStartPos, rowWidth, type);
             }
 
-        }
+
     }
 
     public static int hexRowOffset(int size, int level){
@@ -83,26 +87,102 @@ public class HexWorld {
             int xCoordinate = pos.x + j;
             int yCoordinate = pos.y;
             Random r = new Random();
-            world[xCoordinate][yCoordinate] = TETile.colorVariant(type,32,32,32,r);
+            world[xCoordinate][yCoordinate] = TETile.colorVariant(type,32,32,32,new Random());
         }
     }
-    
+
+    public  static void drawRandomVerticalHexes( TETile[][] world, Position pos, int size, int number){
+//        Position pos2 = new Position(pos.x, pos.y + size*2);
+//        Position pos3 = new Position(pos.x, pos.y+size*4);
+//        addHexagon(world, pos, size, Tileset.GRASS);
+//        addHexagon(world, pos2, size, Tileset.FLOWER);
+//        addHexagon(world, pos3, size, Tileset.WALL);
+
+        for(int i = 0; i < number; i++){
+            int newYPos = pos.y + (2 * size * i);
+            Position rowPos = new Position(pos.x, newYPos);
+            TETile newTile = randomTile();
+            addHexagon(world, rowPos, size, newTile);
+        }
+
+    }
+
+    public static void drawRandomRowsOfHexesOfSizeN(TETile[][] world, Position pos, int size, int maxRowNumber, int startRowNumber){
+        if(maxRowNumber < 1 || startRowNumber < 1){
+            throw new IllegalArgumentException("Cannot be less than 1!");
+        }else if(size < 2){
+            throw new IllegalArgumentException("Hexagon must be at least size 2");
+        }else if(startRowNumber > maxRowNumber ){
+            throw new IllegalArgumentException("Start Row Number cannot be larger than Max Row Number!");
+        }
+
+        for(int i = startRowNumber; i <= maxRowNumber; i++){
+            drawRandomVerticalHexes(world, pos, size, i);
+            pos = getNeighborBottomLeftPosFromAbove(pos,size);
+        }
+
+        pos = getNeighborBottomRightPosFromBelow(pos,size);
+        pos = getNeighborBottomLeftPosFromBelow(pos,size);
+
+        for(int j = maxRowNumber - 1; j >= startRowNumber; j--){
+            drawRandomVerticalHexes(world, pos, size, j);
+            pos = getNeighborBottomLeftPosFromBelow(pos,size);
+        }
+    }
+
+    public static Position getNeighborBottomLeftPosFromAbove(Position pos, int size){
+        int newXPos = (pos.x + size * 2) - 1;
+        int newYPos = (pos.y - size);
+
+        return new Position(newXPos, newYPos);
+    }
+
+    public static Position getNeighborBottomLeftPosFromBelow(Position pos, int size){
+        int newXPos = (pos.x + size * 2) - 1;
+        int newYPos = (pos.y + size);
+
+        return new Position(newXPos, newYPos);
+    }
+
+    public static Position getNeighborBottomRightPosFromBelow(Position pos, int size){
+        int newPosX = (pos.x - size * 2)+1;
+        int newPosY = (pos.y + size);
+
+        return new Position(newPosX, newPosY);
+    }
+
+    public static TETile randomTile(){
+        int tileNum = RANDOM.nextInt(5);
+        switch (tileNum) {
+            case 0: return Tileset.MOUNTAIN;
+            case 1: return Tileset.FLOWER;
+            case 2: return Tileset.GRASS;
+            case 3: return Tileset.WATER;
+            default: return Tileset.SAND;
+        }
+    }
+
     public static void main(String[] args){
         TERenderer ter = new TERenderer();
-        ter.initialize(90, 90);
-        Position p = new Position(40,50);
-        TETile t = Tileset.WALL;
+        ter.initialize(WIDTH, HEIGHT);
+        Position pos = new Position(20,100);
+        TETile t = Tileset.GRASS;
 
-        TETile[][] world = new TETile[90][90];
-        for (int x = 0; x < 90; x += 1) {
-            for (int y = 0; y < 90; y += 1) {
+        TETile[][] world = new TETile[WIDTH][HEIGHT];
+        for (int x = 0; x < WIDTH; x += 1) {
+            for (int y = 0; y < HEIGHT; y += 1) {
                 world[x][y] = Tileset.NOTHING;
             }
         }
+        int size = 4;
+        int number = 1;
+        int maxRowNumber = 8;
 
-        addHexagon(world, p, 6, t);
+        drawRandomRowsOfHexesOfSizeN(world, pos, size, maxRowNumber, number);
+
 
         ter.renderFrame(world);
+
     }
 
 //    @Test
