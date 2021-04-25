@@ -23,7 +23,13 @@ public class World {
             Rooms eachRoom = roomList.get(i);
             for(int x = eachRoom.pos.X; x < eachRoom.pos.X + eachRoom.width; x++){
                 for(int y = eachRoom.pos.Y; y < eachRoom.pos.Y + eachRoom.height; y++){
-                    world[x][y] = Tileset.NOTHING;
+                    boolean isXSidesEdge = (x == eachRoom.pos.X || x == eachRoom.pos.X + eachRoom.width-1);
+                    boolean isYSidesEdge = (y == eachRoom.pos.Y || y == eachRoom.pos.Y + eachRoom.height-1);
+                    if(isXSidesEdge || isYSidesEdge){
+                        world[x][y] = Tileset.WALL;
+                    }else{
+                        world[x][y] = Tileset.NOTHING;
+                    }
                 }
             }
         }
@@ -40,7 +46,7 @@ public class World {
     public static void initializeWorld(){
         for (int x = 0; x < Game.WIDTH; x++) {
             for (int y = 0; y < Game.HEIGHT; y++) {
-                world[x][y] = Tileset.WALL;//Choose the type of tiles to cover the window
+                world[x][y] = Tileset.NOTHING;//Choose the type of tiles to cover the window
             }
         }
     }
@@ -51,7 +57,7 @@ public class World {
 
         initializeWorld();
 
-        for(int i = 0 ; i < 25; i++){
+        for(int i = 0 ; i < 30; i++){
             addRoom();
         }
         printRooms();

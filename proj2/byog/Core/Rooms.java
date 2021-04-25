@@ -12,7 +12,7 @@ public class Rooms {
     public Position pos;
 
     public static final int maxRoomSide = 12;
-    public static final int minRoomSide = 3;
+    public static final int minRoomSide = 6;
 
     public Rooms(){
         do{
