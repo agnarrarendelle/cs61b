@@ -13,10 +13,9 @@ public class Position implements Comparable<Position>{
     }
 
     public int compareTo(Position pos){
-        if(this.X == pos.X && this.Y == pos.Y){
+        if(this.X > pos.X){
             return 1;
         }
-
         return -1;
     }
 }

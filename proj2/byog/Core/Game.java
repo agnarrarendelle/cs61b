@@ -9,8 +9,8 @@ public class Game {
     TERenderer ter = new TERenderer();
     /* Feel free to change the width and height. */
     public static final int WIDTH = 80;
-    public static final int HEIGHT = 40;
-    public static final int SEED = 229128;
+    public static final int HEIGHT = 80;
+    public static final int SEED = 50;
 
     public static final Random random = new Random(SEED);
 
