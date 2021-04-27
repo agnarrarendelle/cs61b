@@ -12,9 +12,10 @@ import java.util.Random;
 public class World {
     public static TETile[][] world = new TETile[Game.WIDTH][Game.HEIGHT];
     public static List<Rooms> roomList = new ArrayList<>();
-    public static final TETile roomTexture = Tileset.GRASS;
+    public static final TETile roomTexture = Tileset.FLOOR;
     private static final int colorDifference = 64;
     public static final TETile wallTexture = Tileset.WALL;
+    public static final TETile hallwayTexture = Tileset.WATER;
 
     private static void addRoom(){
         Rooms newRooom = new Rooms();
@@ -41,7 +42,7 @@ public class World {
         }
 
         //sort the random Position in each room by their X value after printing all rooms
-        Collections.sort(Rooms.randomPositionInsideEachRoom);
+
     }
 
     public static void printRoomsWithPos(Position pos, int width, int height){
@@ -93,7 +94,7 @@ public class World {
 
 
         printRooms();
-        printRandomPosInRoom();
+        //printRandomPosInRoom();
         printHallways();
 
 
