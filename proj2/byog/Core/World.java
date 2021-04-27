@@ -12,6 +12,9 @@ import java.util.Random;
 public class World {
     public static TETile[][] world = new TETile[Game.WIDTH][Game.HEIGHT];
     public static List<Rooms> roomList = new ArrayList<>();
+    public static final TETile roomTexture = Tileset.GRASS;
+    private static final int colorDifference = 64;
+    public static final TETile wallTexture = Tileset.WALL;
 
     private static void addRoom(){
         Rooms newRooom = new Rooms();
@@ -28,14 +31,17 @@ public class World {
                     boolean isYSidesEdge = (y == eachRoom.pos.Y || y == eachRoom.pos.Y + eachRoom.height-1);
                     if(isXSidesEdge || isYSidesEdge){
                         //world[x][y] = Tileset.WALL;
-                        int color = Game.random.nextInt(32);
-                        world[x][y] = TETile.colorVariant(Tileset.WALL, color,color,color, Game.random);
+                        int color = Game.random.nextInt(62);
+                        world[x][y] = Tileset.WALL;
                     }else{
-                        world[x][y] = Tileset.NOTHING;
+                        world[x][y] = roomTexture;
                     }
                 }
             }
         }
+
+        //sort the random Position in each room by their X value after printing all rooms
+        Collections.sort(Rooms.randomPositionInsideEachRoom);
     }
 
     public static void printRoomsWithPos(Position pos, int width, int height){
@@ -64,13 +70,17 @@ public class World {
         }
     }
 
-    public static void printHallways(){
+    public static void printRandomPosInRoom(){
         for(int i = 0; i < Rooms.randomPositionInsideEachRoom.size(); i++){
             Position eachRoomPos = Rooms.randomPositionInsideEachRoom.get(i);
             int x = eachRoomPos.X;
             int y = eachRoomPos.Y;
             world[x][y] = Tileset.SAND;
         }
+    }
+
+    public static void printHallways(){
+        Hallway.drawHallways();
     }
 
     public static void main(String[] args){
@@ -80,14 +90,14 @@ public class World {
         initializeWorld();
 
         addRandomNumberOfRooms();
+
+
         printRooms();
+        printRandomPosInRoom();
         printHallways();
 
-        Collections.sort(Rooms.randomPositionInsideEachRoom);
-        for(int i = 0; i < Rooms.randomPositionInsideEachRoom.size(); i++){
-            Position pos = Rooms.randomPositionInsideEachRoom.get(i);
-            System.out.print(pos.X +" | ");
-        }
+
+
 
         ter.renderFrame(world);
     }
