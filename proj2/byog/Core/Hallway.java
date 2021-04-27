@@ -14,7 +14,6 @@ import java.util.Random;
 
 public class Hallway {
 //1.directky connected
-    private static final int maxWidth = 3;
 
     public static void drawHallways(){
         Collections.sort(Rooms.randomPositionInsideEachRoom);

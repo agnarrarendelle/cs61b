@@ -17,6 +17,9 @@ public class World {
     public static final TETile wallTexture = Tileset.WALL;
     public static final TETile hallwayTexture = Tileset.WATER;
 
+    public static final int maxNumOfRooms = 45;
+    public static final int minNumOfRooms = 25;
+
     private static void addRoom(){
         Rooms newRooom = new Rooms();
         roomList.add(newRooom);
@@ -54,9 +57,8 @@ public class World {
     }
 
     public static void addRandomNumberOfRooms(){
-        int minNum = 15;
-        int maxNum = 35;
-        int maxNumOfRooms = Game.random.nextInt(maxNum - minNum) + minNum;
+
+        int maxNumOfRooms = Game.random.nextInt(World.maxNumOfRooms - World.minNumOfRooms) + World.minNumOfRooms;
 
         for(int i = 0; i < maxNumOfRooms; i++){
             addRoom();
@@ -84,6 +86,14 @@ public class World {
         Hallway.drawHallways();
     }
 
+    public static void printDoor(){
+        Door.printDoor();
+    }
+
+    public static void printPlayer(){
+        Player.printPlayer();
+    }
+
     public static void main(String[] args){
         TERenderer ter = new TERenderer();
         ter.initialize(Game.WIDTH, Game.HEIGHT);
@@ -97,8 +107,8 @@ public class World {
         //printRandomPosInRoom();
         printHallways();
 
-
-
+        printDoor();
+        printPlayer();
 
         ter.renderFrame(world);
     }
