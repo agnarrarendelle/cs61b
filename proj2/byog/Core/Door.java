@@ -5,6 +5,8 @@ import byog.TileEngine.TETile;
 import byog.TileEngine.Tileset;
 
 public class Door {
+    public static Position doorPosition;
+
     public static void printDoor(){
         int randomX;
         int randomY;
@@ -16,6 +18,8 @@ public class Door {
 
             doorPos = new Position(randomX, randomY);
         }while(!isDoorPosOk(doorPos));
+
+        doorPosition = doorPos;
 
         World.fillPosWithTexture(new Position(doorPos.X, doorPos.Y), Tileset.LOCKED_DOOR);
     }

@@ -8,9 +8,9 @@ import java.util.Random;
 public class Game {
     TERenderer ter = new TERenderer();
     /* Feel free to change the width and height. */
-    public static final int WIDTH = 140;
-    public static final int HEIGHT = 60;
-    public static final int SEED = 8111;
+    public static final int WIDTH = 80;
+    public static final int HEIGHT = 70;
+    public static final int SEED = 81294;
     public static final Random random = new Random(SEED);
 
     /**

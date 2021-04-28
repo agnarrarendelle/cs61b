@@ -12,8 +12,8 @@ public class Rooms {
 
     public static List<Position> randomPositionInsideEachRoom = new ArrayList<>();
 
-    public static final int maxRoomSide = 10;
-    public static final int minRoomSide = 4;
+    public static final int maxRoomSide = 12;
+    public static final int minRoomSide = 5;
 
     public Rooms(){
         do{
@@ -25,8 +25,8 @@ public class Rooms {
 
             //randomly decide the weight/height of the room
             int offset = maxRoomSide - minRoomSide;
-            this.width = Game.random.nextInt(offset) + minRoomSide;
-            this.height = Game.random.nextInt(offset) + minRoomSide;
+            this.width = Game.random.nextInt(offset ) + minRoomSide;
+            this.height = Game.random.nextInt(offset ) + minRoomSide;
         }while(!isRoomOk(this.pos, this.width, this.height));
 
         randomPositionInsideEachRoom.add(getRandomPositionInRoom(this));
@@ -69,9 +69,9 @@ public class Rooms {
 
     public static boolean isRoomOk(Position pos, int width, int height){
         boolean notExceedingHorizontalEdges = (pos.X + width -1) < Game.WIDTH;
-        boolean notExceedingVerticaltalEdges = (pos.Y + height - 1) < Game.HEIGHT;
+        boolean notExceedingVerticalEdges = (pos.Y + height - 1) < Game.HEIGHT;
 
-        return notExceedingHorizontalEdges && notExceedingVerticaltalEdges && isRoomOverlap(pos, width, height);
+        return notExceedingHorizontalEdges && notExceedingVerticalEdges && isRoomOverlap(pos, width, height);
     }
 
 

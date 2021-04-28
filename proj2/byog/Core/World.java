@@ -16,7 +16,6 @@ public class World {
     private static final int colorDifference = 64;
     public static final TETile wallTexture = TETile.colorVariant(Tileset.WALL, colorDifference, colorDifference, colorDifference, Game.random);
     public static final TETile hallwayTexture = Tileset.WATER;
-
     public static final int maxNumOfRooms = 50;
     public static final int minNumOfRooms = 25;
 
@@ -54,6 +53,12 @@ public class World {
 
     public static boolean isPosATexture(Position pos, TETile texture){
         return getPosTexture(pos) == texture;
+    }
+
+    public static double distanceBetweenTwoPos(Position pos1, Position pos2){
+        int distanceX =(int) Math.pow((pos1.X - pos2.X),2);
+        int distanceY =(int) Math.pow((pos1.Y - pos2.Y),2);
+        return Math.sqrt(distanceX+distanceY);
     }
 
     public static void printRoomsWithPos(Position pos, int width, int height){
