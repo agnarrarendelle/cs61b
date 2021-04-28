@@ -17,7 +17,7 @@ public class Door {
             doorPos = new Position(randomX, randomY);
         }while(!isDoorPosOk(doorPos));
 
-        World.world[doorPos.X][doorPos.Y] = Tileset.LOCKED_DOOR;
+        World.fillPosWithTexture(new Position(doorPos.X, doorPos.Y), Tileset.LOCKED_DOOR);
     }
 
     private static boolean isDoorPosOk(Position pos){
@@ -26,9 +26,11 @@ public class Door {
 
         TETile middle = World.world[pos.X][pos.Y];
             if(pos.Y + 1 < Game.HEIGHT - 1){
-                TETile above = World.world[pos.X][pos.Y+1];
+
+                TETile above = World.getPosTexture(new Position(pos.X, pos.Y+1));
+
                 if(pos.Y - 1 > 1){
-                    TETile below = World.world[pos.X][pos.Y-1];
+                    TETile below = World.getPosTexture(new Position(pos.X, pos.Y-1));
 
                     boolean isAtWall = (middle == World.wallTexture);
                     boolean isAboveFloor = (above == World.roomTexture);

@@ -23,21 +23,11 @@ public class Hallway {
             Position nextPos = Rooms.randomPositionInsideEachRoom.get(i+1);
             connectTwoRooms(currentPos, nextPos);
         }
-
+        closeHallways();
         clearHallway();
     }
 
     private static void connectTwoRooms(Position smallerX, Position biggerX){
-        //first print a horizontal rect
-//        for(int x = smallerX.X; x < smallerX.X+biggerX.X - smallerX.X; x++){
-//            for(int y = smallerX.Y; y < smallerX.Y + maxWidth; y++){
-//                if(World.world[x][y] == Tileset.NOTHING || World.world[x][y] == World.wallTexture){
-//                    World.world[x][y] = Tileset.WATER;
-//                }
-//            }
-//        }
-
-
         if(smallerX.X == biggerX.X){
             directlyConnect(smallerX, biggerX);
         }else{
@@ -47,48 +37,39 @@ public class Hallway {
 
     private static void LLLShapeConnect(Position pos1, Position pos2){
         Position midPoints = getMidPointOfTwoPos(pos1, pos2);
-
         if(pos1.Y > midPoints.Y){
             int height = pos1.Y - midPoints.Y;
             for(int y = midPoints.Y; y <= midPoints.Y + height; y++){
-                if(World.world[pos1.X][y] == Tileset.NOTHING || World.world[pos1.X][y] == World.wallTexture){
-                World.world[pos1.X][y] = World.hallwayTexture;
+                if((World.isPosATexture(new Position(pos1.X, y), Tileset.NOTHING) || World.isPosATexture(new Position(pos1.X, y), World.wallTexture))){
+                    World.fillPosWithTexture(new Position(pos1.X, y), World.hallwayTexture);
                 }
             }
-            closeHallways();
         }else{
             int height = midPoints.Y - pos1.Y;
             for(int y = midPoints.Y; y >= midPoints.Y - height; y-- ){
-                if(World.world[pos1.X][y] == World.wallTexture ||  World.world[pos1.X][y] == Tileset.NOTHING){
-                    World.world[pos1.X][y] = World.hallwayTexture;
-
-                    World.world[pos1.X+ 1][y ] = World.wallTexture;
-                    World.world[pos1.X- 1][y ] = World.wallTexture;
+                if(World.isPosATexture(new Position(pos1.X, y), World.wallTexture) ||  World.isPosATexture(new Position(pos1.X, y), Tileset.NOTHING)){
+                    World.fillPosWithTexture(new Position(pos1.X, y), World.hallwayTexture);
                 }
 
             }
-            closeHallways();
         }
 
-        Position horizontalStartPos = new Position(midPoints.X-1, midPoints.Y);
 
         int width = pos2.X - midPoints.X;
         for(int x = midPoints.X; x <= midPoints.X + width; x++){
-            if(World.world[x][pos2.Y] == World.wallTexture ||  World.world[x][pos2.Y] == Tileset.NOTHING){
-
-            World.world[x][pos2.Y] = World.hallwayTexture;
-
+            if(World.isPosATexture(new Position(x, pos2.Y), World.wallTexture)||  World.isPosATexture(new Position(x, pos2.Y), Tileset.NOTHING)){
+                World.fillPosWithTexture(new Position(x, pos2.Y), World.hallwayTexture);
             }
         }
-        closeHallways();
 
     }
+
 
 
     private static void closeHallways(){
         for (int x = 0; x < Game.WIDTH; x++) {
             for (int y = 0; y < Game.HEIGHT; y++) {
-                if(World.world[x][y] == World.hallwayTexture){
+                if(World.isPosATexture(new Position(x,y), World.hallwayTexture)){
                     List<Position> aroundPos = new ArrayList<>();
 
 
@@ -101,8 +82,8 @@ public class Hallway {
 
                     for(int m = 0; m < aroundPos.size();m++){
                         Position eachPos = aroundPos.get(m);
-                        if(eachPos != null && World.world[eachPos.X][eachPos.Y] == Tileset.NOTHING){
-                            World.world[eachPos.X][eachPos.Y] = World.wallTexture;
+                        if(eachPos != null && World.isPosATexture(new Position(eachPos.X, eachPos.Y), Tileset.NOTHING)){
+                            World.fillPosWithTexture(new Position(eachPos.X, eachPos.Y), World.wallTexture);
                         }
                     }
                 }
@@ -126,12 +107,9 @@ public class Hallway {
         }
 
         int height = above.Y - below.Y;
-
         for(int y = below.Y; y <= below.Y + height; y++ ){
-            if(World.world[above.X][y] == World.wallTexture ||  World.world[above.X][y] == Tileset.NOTHING){
-                World.world[above.X][y] = World.hallwayTexture;
-                World.world[above.X-1][y] = World.wallTexture;
-                World.world[above.X+1][y] = World.wallTexture;
+            if(World.isPosATexture(new Position(above.X, y), World.wallTexture) || World.isPosATexture(new Position(above.X, y), Tileset.NOTHING)){
+                World.fillPosWithTexture(new Position(above.X, y), World.hallwayTexture);
             }
         }
     }
@@ -144,24 +122,11 @@ public class Hallway {
     private static void clearHallway(){
         for (int x = 0; x < Game.WIDTH; x++) {
             for (int y = 0; y < Game.HEIGHT; y++) {
-                if(World.world[x][y] == World.hallwayTexture){
-                    World.world[x][y] = World.roomTexture;
+                if(World.isPosATexture(new Position(x,y), World.hallwayTexture)){
+                    World.fillPosWithTexture(new Position(x,y), World.roomTexture);
                 }
             }
         }
     }
 
-
-
-    @Test
-    public void testChooseRandomPosInVerticalSides(){
-       Position pos1 = new Position(5,14);
-       Position pos2 = new Position(7, 9);
-
-       Position expec = new Position(5,9);
-       
-       Position actual = getMidPointOfTwoPos(pos1, pos2);
-        
-        assertEquals(expec.X, actual.X);
-    }
 }

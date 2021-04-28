@@ -12,8 +12,8 @@ public class Rooms {
 
     public static List<Position> randomPositionInsideEachRoom = new ArrayList<>();
 
-    public static final int maxRoomSide = 12;
-    public static final int minRoomSide = 6;
+    public static final int maxRoomSide = 10;
+    public static final int minRoomSide = 4;
 
     public Rooms(){
         do{
@@ -157,11 +157,6 @@ public class Rooms {
         int posX = room.pos.X + room.width - 1;
         int posY = room.pos.Y + room.height - 1;
         room.fourConorPositions.add(new Position(posX, posY));
-    }
-
-    public static void main(String[] args){
-
-
     }
 
 }

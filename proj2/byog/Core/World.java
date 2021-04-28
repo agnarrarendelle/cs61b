@@ -14,10 +14,10 @@ public class World {
     public static List<Rooms> roomList = new ArrayList<>();
     public static final TETile roomTexture = Tileset.FLOOR;
     private static final int colorDifference = 64;
-    public static final TETile wallTexture = Tileset.WALL;
+    public static final TETile wallTexture = TETile.colorVariant(Tileset.WALL, colorDifference, colorDifference, colorDifference, Game.random);
     public static final TETile hallwayTexture = Tileset.WATER;
 
-    public static final int maxNumOfRooms = 45;
+    public static final int maxNumOfRooms = 50;
     public static final int minNumOfRooms = 25;
 
     private static void addRoom(){
@@ -33,33 +33,39 @@ public class World {
                 for(int y = eachRoom.pos.Y; y < eachRoom.pos.Y + eachRoom.height; y++){
                     boolean isXSidesEdge = (x == eachRoom.pos.X || x == eachRoom.pos.X + eachRoom.width-1);
                     boolean isYSidesEdge = (y == eachRoom.pos.Y || y == eachRoom.pos.Y + eachRoom.height-1);
+                    Position roomPos = new Position(x,y);
                     if(isXSidesEdge || isYSidesEdge){
-                        //world[x][y] = Tileset.WALL;
-                        int color = Game.random.nextInt(62);
-                        world[x][y] = Tileset.WALL;
+                        fillPosWithTexture(roomPos, wallTexture);
                     }else{
-                        world[x][y] = roomTexture;
+                        fillPosWithTexture(roomPos, roomTexture);
                     }
                 }
             }
         }
+    }
 
-        //sort the random Position in each room by their X value after printing all rooms
+    public static void fillPosWithTexture(Position pos, TETile texture){
+        world[pos.X][pos.Y] = texture;
+    }
 
+    public static TETile getPosTexture(Position pos){
+        return world[pos.X][pos.Y];
+    }
+
+    public static boolean isPosATexture(Position pos, TETile texture){
+        return getPosTexture(pos) == texture;
     }
 
     public static void printRoomsWithPos(Position pos, int width, int height){
             for(int x = pos.X; x < pos.X + width; x++){
                 for(int y = pos.Y; y < pos.Y + height; y++){
-                    world[x][y] = Tileset.NOTHING;
+                    fillPosWithTexture(new Position(x,y), Tileset.NOTHING);
                 }
             }
     }
 
     public static void addRandomNumberOfRooms(){
-
         int maxNumOfRooms = Game.random.nextInt(World.maxNumOfRooms - World.minNumOfRooms) + World.minNumOfRooms;
-
         for(int i = 0; i < maxNumOfRooms; i++){
             addRoom();
         }
@@ -68,7 +74,8 @@ public class World {
     public static void initializeWorld(){
         for (int x = 0; x < Game.WIDTH; x++) {
             for (int y = 0; y < Game.HEIGHT; y++) {
-                world[x][y] = Tileset.NOTHING;//Choose the type of tiles to cover the window
+                //Choose the type of tiles to cover the window
+                fillPosWithTexture(new Position(x,y), Tileset.NOTHING);
             }
         }
     }
@@ -78,9 +85,11 @@ public class World {
             Position eachRoomPos = Rooms.randomPositionInsideEachRoom.get(i);
             int x = eachRoomPos.X;
             int y = eachRoomPos.Y;
-            world[x][y] = Tileset.SAND;
+            fillPosWithTexture(new Position(x,y), Tileset.SAND);
         }
     }
+
+
 
     public static void printHallways(){
         Hallway.drawHallways();
@@ -99,14 +108,9 @@ public class World {
         ter.initialize(Game.WIDTH, Game.HEIGHT);
 
         initializeWorld();
-
         addRandomNumberOfRooms();
-
-
         printRooms();
-        //printRandomPosInRoom();
         printHallways();
-
         printDoor();
         printPlayer();
 

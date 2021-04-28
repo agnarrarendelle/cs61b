@@ -18,10 +18,10 @@ public class Player {
             pos = new Position(randomX, randomY);
         }while(!isPlayerPosOk(pos));
 
-        World.world[pos.X][pos.Y] = Tileset.PLAYER;
+        World.fillPosWithTexture(new Position(pos.X, pos.Y), Tileset.PLAYER);
     }
 
     private static boolean isPlayerPosOk(Position pos){
-        return World.world[pos.X][pos.Y] == World.roomTexture;
+        return World.isPosATexture(pos, World.roomTexture);
     }
 }
