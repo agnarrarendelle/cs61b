@@ -16,18 +16,26 @@ public class Percolation {
     }
     public boolean world[][];
     public  WeightedQuickUnionUF WQF;
+    public WeightedQuickUnionUF fullnessWQF;
     public int sideLength;
     private int numberOfOpenedPos;
     private int virtualTop;
     private int virtualBottom;
+    private byte posStatus[];
 
     public Percolation(int N){
+        if(N < 1){
+            throw new IllegalArgumentException("N must be at least 1");
+        }
+
         this.sideLength = N;
         this.world = new boolean[N][N];
         this.WQF = new WeightedQuickUnionUF(N*N + 2);
+        this.fullnessWQF = new WeightedQuickUnionUF(N*N + 1);
         this.numberOfOpenedPos = 0;
         this.virtualTop = N*N;
         this.virtualBottom = N*N + 1;
+        this.posStatus = new byte[N*N];
 
         for(int i = 0; i < N; i++){
             for(int k = 0; k < N; k++){
@@ -39,22 +47,28 @@ public class Percolation {
     // open the site (row, col) if it is not open already
     public void open(int row, int col){
         isIllegalPos(row, col);
-        this.numberOfOpenedPos++;
+        if(isOpened(row, col)){
+            return;
+        }
 
+        this.numberOfOpenedPos++;
         this.world[row][col] = true;
+        int posId = xyToId(row, col);
 
         //check if the opened position is at top or bottom and connect it to the virtual spot if it is
         if(isAtTopLine(col)){
-            WQF.union(xyToId(row, col), virtualTop);
+            WQF.union(posId, virtualTop);
+            fullnessWQF.union(posId, virtualTop);
         }
         if(isAtBottomLine(col)){
-            WQF.union(xyToId(row, col), virtualBottom);
+            WQF.union(posId, virtualBottom);
         }
 
         Set<Position> neighborPosSet = neighborPos(new Position(row,col));
         for(Position pos: neighborPosSet){
-            if(isOpen(pos.x, pos.y)){
-                WQF.union(xyToId(pos.x, pos.y), xyToId(row, col));
+            if(isOpened(pos.x, pos.y)){
+                WQF.union(xyToId(pos.x, pos.y), posId);
+                fullnessWQF.union(xyToId(pos.x, pos.y), posId);
             }
         }
     }
@@ -103,7 +117,7 @@ public class Percolation {
 
 
     private boolean isPosInWorld(int pos){
-        return pos >= 0 && pos < this.sideLength;
+        return (pos >= 0) && (pos < this.sideLength);
     }
 
     //trans the (X,Y) coordinate to their corresponding ID
@@ -114,7 +128,7 @@ public class Percolation {
     }
 
     // is the site (row, col) open?
-    public boolean isOpen(int row, int col){
+    public boolean isOpened(int row, int col){
         isIllegalPos(row, col);
 
         return this.world[row][col];
@@ -122,15 +136,12 @@ public class Percolation {
 
     // is the site (row, col) full?
     public boolean isFull(int row, int col){
-        if(isOpen(row, col)){
-            int posId = xyToId(row, col);
-            boolean isConnectedToTop = WQF.connected(posId, virtualTop);
-            boolean isConnectedToBottom = WQF.connected(posId, virtualBottom);
-
-            return isConnectedToBottom || isConnectedToTop;
+        if(isOpened(row, col)){
+            return fullnessWQF.connected(xyToId(row, col), virtualTop);
         }
         return false;
     }
+
 
     // number of open sites
     public int numberOfOpenSites(){
@@ -144,10 +155,16 @@ public class Percolation {
 
     public static void main(String[] args){
         Percolation testPerco = new Percolation(3);
-        testPerco.open(1,0);
-        testPerco.open(1,1);
-        testPerco.open(1,2);
+        testPerco.open(0,2);
+        testPerco.open(0,1);
+        testPerco.open(0,0);
 
-        System.out.println(testPerco.percolates());
+        testPerco.open(2,1);
+        testPerco.open(2,2);
+        testPerco.open(1,1);
+
+
+
+        System.out.println(testPerco.isFull(2,2));
     }
 }
