@@ -74,11 +74,16 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
     public void put(K key, V value) {
         isKeyValid(key);
 
+
         if(isLoadFactorTooBig()){
             resize();
         }
 
         int index = hash(key);
+        if(containsKey(key)){
+            buckets[index].put(key, value);
+            return;
+        }
         buckets[index].put(key, value);
         this.size++;
     }
@@ -159,11 +164,12 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         MyHashMap<Integer, Character> testMap = new MyHashMap<>();
 
         char c;
-        for(int i = 0; i < 40; i++){
-            c = (char) ('a' + rand.nextInt(26));
-            testMap.put(rand.nextInt(500), c);
-        }
+//        for(int i = 0; i < 40; i++){
+//            c = (char) ('a' + rand.nextInt(26));
+//            testMap.put(rand.nextInt(500), c);
+//        }
         testMap.put(50, 'a');
+        testMap.put(50,'b');
 
         Set<Integer> set = testMap.keySet();
         Character ca = testMap.get(50);
