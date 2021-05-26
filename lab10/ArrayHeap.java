@@ -27,8 +27,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
      * Returns the index of the node to the left of the node at i.
      */
     private static int leftIndex(int i) {
-        /* TODO: Your code here! */
-        return 0;
+        return i*2;
     }
 
     /**
@@ -36,7 +35,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
      */
     private static int rightIndex(int i) {
         /* TODO: Your code here! */
-        return 0;
+        return leftIndex(i)+1;
     }
 
     /**
@@ -44,7 +43,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
      */
     private static int parentIndex(int i) {
         /* TODO: Your code here! */
-        return 0;
+        return i/2;
     }
 
     /**
@@ -107,8 +106,19 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         // Throws an exception if index is invalid. DON'T CHANGE THIS LINE.
         validateSinkSwimArg(index);
 
-        /** TODO: Your code here. */
-        return;
+        if(index == 1){
+            return;
+        }
+        Node currentNode = getNode(index);
+        int parentIII = parentIndex(index);
+        Node parentNode = getNode(parentIII);
+
+        if(currentNode.myPriority < parentNode.myPriority){
+            swap(index, parentIII);
+        }
+        swim(parentIII);
+
+
     }
 
     /**
@@ -117,10 +127,25 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
     private void sink(int index) {
         // Throws an exception if index is invalid. DON'T CHANGE THIS LINE.
         validateSinkSwimArg(index);
-
         /** TODO: Your code here. */
-        return;
+
+        Node currentNode = getNode(index);
+        int leftInd = leftIndex(index);
+        int rightInd = rightIndex(index);
+        int minOfkids = min(leftInd, rightInd);
+        Node smallerKid = getNode(minOfkids);
+
+        if(smallerKid == null){
+            return;
+        }
+        if(currentNode.myPriority > smallerKid.myPriority){
+            swap(index, minOfkids);
+            sink(minOfkids);
+        }
+
     }
+
+
 
     /**
      * Inserts an item with the given priority value. This is enqueue, or offer.
@@ -134,6 +159,9 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         }
 
         /* TODO: Your code here! */
+        this.size++;
+        contents[size] = new Node(item, priority);
+        swim(size);
     }
 
     /**
@@ -143,7 +171,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
     @Override
     public T peek() {
         /* TODO: Your code here! */
-        return null;
+        return contents[size].myItem;
     }
 
     /**
@@ -158,7 +186,18 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
     @Override
     public T removeMin() {
         /* TODO: Your code here! */
-        return null;
+        if(size == 0){
+            return null;
+        }
+
+        T returnedItem = contents[1].myItem;
+        int rootInd = 1;
+        int lastInd = size;
+        swap(rootInd, lastInd);
+        this.size--;
+        sink(rootInd);
+
+        return returnedItem;
     }
 
     /**
@@ -181,7 +220,29 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
     @Override
     public void changePriority(T item, double priority) {
         /* TODO: Your code here! */
-        return;
+       if(size == 0){
+           return;
+       }
+
+       //look for the item index
+        int i;
+       for(i = 1; i <= size; i++){
+           if(contents[i].myItem.equals(item)){
+               break;
+           }
+       }
+
+       //items is not found
+       if(i > size){
+           return;
+       }
+
+       Node n = getNode(i);
+       n.myPriority = priority;
+
+       //check if the item is in the correct position
+       swim(i);
+       sink(i);
     }
 
     /**
@@ -409,7 +470,9 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         int i = 0;
         String[] expected = {"a", "b", "c", "c", "d", "d", "e", "g", "h", "i"};
         while (pq.size() > 1) {
-            assertEquals(expected[i], pq.removeMin());
+            String removedItem = pq.removeMin();
+            String actual = expected[i];
+            assertEquals(actual, removedItem);
             i += 1;
         }
     }
